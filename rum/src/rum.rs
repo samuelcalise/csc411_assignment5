@@ -28,11 +28,11 @@ impl Rum{
 
     pub fn conditional_move(&mut self, some_instruction: Instruction)
     {
-        let a_bit = instruction.a as usize;
+        let a_bit = some_instruction.a as usize;
 
-        let b_bit = instruction.b.unwrap() as usize;
+        let b_bit = some_instruction.b.unwrap() as usize;
 
-        let c_bit = instruction.c.unwrap() as usize;
+        let c_bit = some_instruction.c.unwrap() as usize;
 
         if self.register.get_registerValue(c_bit) != 0{
             
@@ -46,63 +46,63 @@ impl Rum{
 
     pub fn segment_store(){}
 
-    pub fn addition(&mut self, instruction: Instruction)
+    pub fn addition(&mut self, some_instruction: Instruction)
     {
-        let a_bit = instruction.a as usize;
+        let a_bit = some_instruction.a as usize;
 
-        let b_bit = instruction.b.unwrap() as usize;
+        let b_bit = some_instruction.b.unwrap() as usize;
 
-        let c_bit = instruction.c.unwrap() as usize;
+        let c_bit = some_instruction.c.unwrap() as usize;
 
         let value = self.register.get_registerValue(b).wrapping_add(self.register.get_registerValue(c_bit));
 
         self.register.set_registerValue(a_bit, value);
     }
 
-    pub fn multiplication()
+    pub fn multiplication(&mut self, some_instruction: Instruction)
     {
-        let a_bit = instruction.a as usize;
+        let a_bit = some_instruction.a as usize;
 
-        let b_bit = instruction.b.unwrap() as usize;
+        let b_bit = some_instruction.b.unwrap() as usize;
 
-        let c_bit = instruction.c.unwrap() as usize;
+        let c_bit = some_instruction.c.unwrap() as usize;
 
         let value = self.register.get_registerValue(b).wrapping_mul(self.register.get_registerValue(c_bit));
 
         self.register.set_registerValue(a_bit, value);
     }
 
-    pub fn division(&mut self, instruction: Instruction)
+    pub fn division(&mut self, some_instruction: Instruction)
     {
-        let a_bit = instruction.a as usize;
+        let a_bit = some_instruction.a as usize;
 
-        let b_bit = instruction.b.unwrap();
+        let b_bit = some_instruction.b.unwrap();
 
-        let c_bit = instruction.c.unwrap();
+        let c_bit = some_instruction.c.unwrap();
 
         let value = self.register.get_registerValue(b_bit).wrapping_div(self.register.get_registerValue(c_bit));
 
         self.register.get_registerValue(a_bit, value);
     }
 
-    pub fn bit_NAND()
+    pub fn bit_NAND(&mut self, some_instruction: Instruction)
     {
-        let a_bit = instruction.a as usize;
+        let a_bit = some_instruction.a as usize;
 
-        let b_bit = instruction.b.unwrap() as usize;
+        let b_bit = some_instruction.b.unwrap() as usize;
 
-        let c_bit = instruction.c.unwrap() as usize;
+        let c_bit = some_instruction.c.unwrap() as usize;
 
         let value = !(self.register.get_registerValue(b_bit) & self.register.get_registerValue(c_bit));
 
         self.register.set_registerValue(a_bit, value);
     }
 
-    pub fn map_segment()
+    pub fn map_segment(&mut self, some_instruction: Instruction)
     {
-        let b_bit = instruction.b.unwrap() as usize;
+        let b_bit = some_instruction.b.unwrap() as usize;
 
-        let c_bit = instruction.c.unwrap() as usize;
+        let c_bit = some_instruction.c.unwrap() as usize;
 
         let new_size = self.register.get_registerValue(c_bit) as usize;
 
@@ -111,18 +111,18 @@ impl Rum{
         self.register.set_registerValue(b_bit, new_address as u32);
     }
 
-    pub fn unmap_segment()
+    pub fn unmap_segment(&mut self, some_instruction: Instruction)
     {
-        let c_bit = instruction.c.unwrap() as usize;
+        let c_bit = some_instruction.c.unwrap() as usize;
 
         let this_address = self.register.get_registerValue(c_bit) as usize;
 
         self.segment.unmap_segment(this_address);
     }
 
-    pub fn output()
+    pub fn output(&mut self, some_instruction: Instruction)
     {
-        let c_bit = instruction.c.unwrap() as usize;
+        let c_bit = some_instruction.c.unwrap() as usize;
 
         let c_value = self.register.get_registerValue(c_bit);
 
@@ -133,9 +133,47 @@ impl Rum{
         print!("{}", char::from_u32(c_value).unwrap());
     }
 
-    pub fn user_input(){}
+    pub fn user_input(&mut self, some_instruction: Instruction)
+    {
+        let c_bit = some_instruction.c.unwrap() as usize;
 
-    pub fn load_program(){}
+        if let Some(Ok(value)) = stdin().bytes().next()
+        {
+            if value as char == '\n'
+            {
+                self.register.set_registerValue(c_bit, std::u32::MAX);
+            }
+            else
+            {
+                self.register.set_registerValue(c_bit, value as u32);
+            }
+        }
+        else
+        {
+            panic!("Error: Invalid Input");
+        }
+    }
 
-    pub fn load_value(){}
+    pub fn load_program(&mut self, some_instruction: Instruction) -> usize
+    {
+        let b_bit = some_instruction.b.unwrap() as usize;
+
+        let c_bit = some_instruction.c.unwrap() as usize;
+
+        if self.register.get_registerValue(b_bit) != 0
+        {
+            self.segment.insert_value(self.register.get_registerValue(b_bit) as usize);
+        }
+
+        self.register.get_registerValue(c_bit) as usize
+    }
+
+    pub fn load_value(&mut self, some_instruction: Instruction)
+    {
+        let a_bit = some_instruction.a as usize;
+
+        let value = some_instruction.value.unwrap();
+
+        self.registers.set_registerValue(a_bit, value);
+    }
 }
