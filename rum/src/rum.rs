@@ -1,43 +1,141 @@
-use std::env;
-use std::process;
-use std::convert::TryInto;
-mod rum;
-mod segments;
-mod registers;
-mod instructions;
+use std::io::{stdin, Read};
+use crate::{registers::Registers, segments::Segments, um_instruction::Instruction};
 
-//function take from past lab
-pub fn load_instruction(input: Option<&str>) -> Vec<u32> 
-{
-    let mut raw_reader: Box<dyn std::io::BufRead> = match input {
-        None => Box::new(std::io::BufReader::new(std::io::stdin())),
-        Some(filename) => Box::new(std::io::BufReader::new(
-            std::fs::File::open(filename).unwrap(),
-        )),
-    };
 
-    let mut buf = Vec::<u8>::new(); 
-    raw_reader.read_to_end(&mut buf).unwrap();
 
-    let instructions: Vec<u32> = buf
-        .chunks_exact(4)
-        .map(|x| u32::from_be_bytes(x.try_into().unwrap())) 
-        .collect();
-    
-    instructions
+pub struct Rum{
+
+    segment: Segments,
+    register: Registers
 }
 
 
+impl Rum{
 
-fn main() 
-{
-    let command_line: Vec<String> = env::args().collect();
+    pub fn new (some_instruction: &Vec<u32>) -> Rum
+    {
+        Rum{
 
-    let command_file = &command_line[1];
+            segment: Segments::new(&some_instruction),
+            register: Registers::new()
+        }
+    }
 
-    let runtime_instruction = load_instruction(Some(command_file));
+    pub fn get_instruction(&self, c: usize) -> Instruction
+    {
+        self.segment.get_instruction(c)
+    }
 
-    //let mut rum = rum::Rum::new(&runtime_instruction);
+    pub fn conditional_move(&mut self, some_instruction: Instruction)
+    {
+        let a_bit = instruction.a as usize;
 
-    let instruction_count = 0 as usize;
+        let b_bit = instruction.b.unwrap() as usize;
+
+        let c_bit = instruction.c.unwrap() as usize;
+
+        if self.register.get_registerValue(c_bit) != 0{
+            
+            let value = self.register.get_registerValue(b_bit);
+
+            self.register.set_registerValue(a, value);
+        }
+    }
+
+    pub fn segment_load(){}
+
+    pub fn segment_store(){}
+
+    pub fn addition(&mut self, instruction: Instruction)
+    {
+        let a_bit = instruction.a as usize;
+
+        let b_bit = instruction.b.unwrap() as usize;
+
+        let c_bit = instruction.c.unwrap() as usize;
+
+        let value = self.register.get_registerValue(b).wrapping_add(self.register.get_registerValue(c_bit));
+
+        self.register.set_registerValue(a_bit, value);
+    }
+
+    pub fn multiplication()
+    {
+        let a_bit = instruction.a as usize;
+
+        let b_bit = instruction.b.unwrap() as usize;
+
+        let c_bit = instruction.c.unwrap() as usize;
+
+        let value = self.register.get_registerValue(b).wrapping_mul(self.register.get_registerValue(c_bit));
+
+        self.register.set_registerValue(a_bit, value);
+    }
+
+    pub fn division(&mut self, instruction: Instruction)
+    {
+        let a_bit = instruction.a as usize;
+
+        let b_bit = instruction.b.unwrap();
+
+        let c_bit = instruction.c.unwrap();
+
+        let value = self.register.get_registerValue(b_bit).wrapping_div(self.register.get_registerValue(c_bit));
+
+        self.register.get_registerValue(a_bit, value);
+    }
+
+    pub fn bit_NAND()
+    {
+        let a_bit = instruction.a as usize;
+
+        let b_bit = instruction.b.unwrap() as usize;
+
+        let c_bit = instruction.c.unwrap() as usize;
+
+        let value = !(self.register.get_registerValue(b_bit) & self.register.get_registerValue(c_bit));
+
+        self.register.set_registerValue(a_bit, value);
+    }
+
+    pub fn map_segment()
+    {
+        let b_bit = instruction.b.unwrap() as usize;
+
+        let c_bit = instruction.c.unwrap() as usize;
+
+        let new_size = self.register.get_registerValue(c_bit) as usize;
+
+        let new_address =  self.segment.map_segment(new_size);
+
+        self.register.set_registerValue(b_bit, new_address as u32);
+    }
+
+    pub fn unmap_segment()
+    {
+        let c_bit = instruction.c.unwrap() as usize;
+
+        let this_address = self.register.get_registerValue(c_bit) as usize;
+
+        self.segment.unmap_segment(this_address);
+    }
+
+    pub fn output()
+    {
+        let c_bit = instruction.c.unwrap() as usize;
+
+        let c_value = self.register.get_registerValue(c_bit);
+
+        if c_value > 255{
+            panic!("The value is outside of [0-255]")
+        }
+
+        print!("{}", char::from_u32(c_value).unwrap());
+    }
+
+    pub fn user_input(){}
+
+    pub fn load_program(){}
+
+    pub fn load_value(){}
 }
