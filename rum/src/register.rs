@@ -1,5 +1,7 @@
 
 
+#[derive(Clone, Debug)]
+
 pub struct Register {
     register: Vec<u32>
 }
