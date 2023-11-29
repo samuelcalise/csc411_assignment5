@@ -46,46 +46,46 @@ fn main()
         instruction_count += 1;
 
         if this_instruction.op == um_instruction::Opcode::CMov{
-            rum.cmov(this_instruction);
+            rum.conditional_move(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Load {
-            rum.load(this_instruction);
+            rum.segment_load(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Store {
-            rum.store(this_instruction);
+            rum.segment_store(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Add {
-            rum.add(this_instruction);
+            rum.addition(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Mul {
-            rum.mul(this_instruction);
+            rum.multiplication(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Div {
-            rum.div(this_instruction);
+            rum.division(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Nand {
-            rum.nand(this_instruction);
+            rum.bit_NAND(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Halt {
             process::exit(0);
         }
         else if this_instruction.op == um_instruction::Opcode::MapSegment {
-            rum.mapsegment(this_instruction);
+            rum.map_segment(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::UnmapSegment {
-            rum.unmapsegment(this_instruction);
+            rum.unmap_segment(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Output {
-            rum.output(this_instruction);
+            rum.output_program(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Input {
-            rum.input(this_instruction);
+            rum.user_input(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::LoadProgram {
-            instruction_count = rum.loadprogram(this_instruction);
+            instruction_count = rum.load_program(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::LoadValue {
-            rum.loadvalue(this_instruction);
+            rum.load_value(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Err {
             panic!("Unknown opcode for instruction {:?}", this_instruction)

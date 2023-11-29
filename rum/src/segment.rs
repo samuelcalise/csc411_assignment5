@@ -19,7 +19,7 @@ impl Segments {
         }
     }
 
-    pub fn mapsegment(&mut self, size: usize) -> usize {
+    pub fn map_segment(&mut self, size: usize) -> usize {
         let zeros = vec![0_u32; size];
         match self.free_addresses.len(){
             0 => {
@@ -35,7 +35,7 @@ impl Segments {
        
     }
 
-    pub fn unmapsegment(&mut self, address: usize) {
+    pub fn unmap_segment(&mut self, address: usize) {
         self.free_addresses.push(address);
         let _new_add = mem::replace(self.instruc_to_do.get_mut(address).unwrap(), Vec::new());
     }
@@ -44,7 +44,7 @@ impl Segments {
         self.instruc_to_do.get(address)
     }
 
-    pub fn get_instruction(&self, counter: usize) -> Instruction {
+    pub fn find_instruction(&self, counter: usize) -> Instruction {
         match self.instruc_to_do.get(0) {
             Some(seg) => Instruction::new(seg[counter]),
             None => panic!("No more instructions")
@@ -56,7 +56,7 @@ impl Segments {
         let _new_add = mem::replace(segments.get_mut(index).unwrap(),value);
     }
 
-    pub fn load(&mut self, address: usize) {
+    pub fn insert_value(&mut self, address: usize) {
         let seg = self.instruc_to_do.get(address).unwrap().clone();
         let _new_add = mem::replace(self.instruc_to_do.get_mut(0).unwrap(),seg);
     }
