@@ -13,11 +13,11 @@ impl Register {
         }
     }
 
-    pub fn get_reg_val(&self, register: usize) -> u32 {
+    pub fn get_register_value(&self, register: usize) -> u32 {
         self.vec_registers[register]
     }
 
-    pub fn set_reg_val(&mut self, register: usize, value: u32) {
+    pub fn set_register_value(&mut self, register: usize, value: u32) {
         self.vec_registers[register] = value
     }
 }
