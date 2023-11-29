@@ -117,8 +117,6 @@ pub fn get_value(some_instruction: u32, opcode: &Opcode) -> Option<u32> {
     }
 }
 
-
-
 impl Instruction {
 
     pub fn new(instruction: u32) -> Instruction {
