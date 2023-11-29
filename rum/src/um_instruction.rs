@@ -128,7 +128,6 @@ impl Instruction {
         let c = get_c_bit(instruction, &opcode);
         let value = get_value(instruction, &opcode);
 
-        //our instruction struct is given new values for each new segment
         Instruction {
             opcode,
             a,
