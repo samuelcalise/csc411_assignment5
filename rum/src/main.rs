@@ -37,9 +37,9 @@ fn main()
 
     let mut rum = rum::Rum::new(&runtime_instruction);
 
-    let instruction_count = 0 as usize;
+    let mut instruction_count = 0;
 
-    for i in 0..usize::MAX{
+    for _i in 0..usize::MAX{
 
         let this_instruction = rum.get_instruction(instruction_count);
 
@@ -64,7 +64,7 @@ fn main()
             rum.division(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Nand {
-            rum.bit_NAND(this_instruction);
+            rum.bit_nand(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::Halt {
             process::exit(0);

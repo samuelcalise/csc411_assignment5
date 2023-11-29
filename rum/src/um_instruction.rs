@@ -29,7 +29,7 @@ pub enum Opcode {
     Err
 }
 
-pub fn get_opcode(instruction: u32) -> Opcode {
+pub fn get_opcode(instruction: u64) -> Opcode {
   
     let op = getu(instruction, 28, 4);
 
@@ -80,21 +80,21 @@ pub fn get_opcode(instruction: u32) -> Opcode {
     }
 }
 
-pub fn get_a(instruction: u32, op: &Opcode) -> u32 {
+pub fn get_a(instruction: u64, op: &Opcode) -> u32 {
     if *op == Opcode::LoadValue{
-        return getu(instruction, 25, 3);
+        return getu(instruction, 25, 3) as u32;
     }
     else{
-        return getu(instruction, 6, 3);
+        return getu(instruction, 6, 3) as u32;
     }
 }
 
-pub fn get_b(instruction: u32, op: &Opcode) -> Option<u32> {
+pub fn get_b(instruction: u64, op: &Opcode) -> Option<u32> {
     if *op == Opcode::LoadValue{
         return None;
     }
     else{
-        return Some(getu(instruction, 3, 3));
+        return Some(getu(instruction, 3, 3).try_into().unwrap());
     }
 
 }
@@ -104,14 +104,14 @@ pub fn get_c(instruction: u32, op: &Opcode) -> Option<u32> {
         return None
     }
     else{
-        return Some(getu(instruction, 0, 3));
+        return Some(getu(instruction.into(), 0, 3).try_into().unwrap());
     }
     
 }
 
 pub fn get_value(instruction: u32, op: &Opcode) -> Option<u32> {
     if *op == Opcode::LoadValue{
-        return Some(getu(instruction, 0, 25));
+        return Some(getu(instruction.into(), 0, 25).try_into().unwrap());
     }
     else{
         return None
@@ -123,9 +123,9 @@ pub fn get_value(instruction: u32, op: &Opcode) -> Option<u32> {
 impl Instruction {
 
     pub fn new(instruction: u32) -> Instruction {
-        let op = get_opcode(instruction);
-        let a = get_a(instruction, &op);
-        let b = get_b(instruction, &op);
+        let op = get_opcode(instruction.into());
+        let a = get_a(instruction.into(), &op);
+        let b = get_b(instruction.into(), &op);
         let c = get_c(instruction, &op);
         let value = get_value(instruction, &op);
 

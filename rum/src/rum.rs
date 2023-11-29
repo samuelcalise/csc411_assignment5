@@ -1,10 +1,10 @@
 use std::io::{stdin, Read};
-use crate::{register::Register, segment::Segments, um_instruction::Instruction};
+use crate::{register::Register, segment::Segment, um_instruction::Instruction};
 
 #[derive(Debug, Clone)]
 
 pub struct Rum {
-    segment: Segments,
+    segment: Segment,
     register: Register
 }
 
@@ -14,7 +14,7 @@ impl Rum {
     {
         Rum{
 
-            segment: Segments::new(&some_instruction),
+            segment: Segment::new(&some_instruction),
             register: Register::new()
         }
     }
@@ -50,7 +50,7 @@ impl Rum {
 
         let this_address = self.register.get_reg_val(b_bit) as usize;
 
-        let vec = self.segment.get(this_address).unwrap();
+        let vec = self.segment.get_segment_value(this_address).unwrap();
 
         let reg_index = self.register.get_reg_val(c_bit) as usize;
 
@@ -73,7 +73,7 @@ impl Rum {
 
         let value = self.register.get_reg_val(c_bit);
 
-        self.segment.set_seg_val(this_address, index, value);
+        self.segment.set_segment_value(this_address, index, value);
     }
 
     pub fn addition(&mut self, some_instruction: Instruction)
@@ -115,7 +115,7 @@ impl Rum {
         self.register.set_reg_val(a_bit, value);
     }
 
-    pub fn bit_NAND(&mut self, some_instruction: Instruction)
+    pub fn bit_nand(&mut self, some_instruction: Instruction)
     {
         let a_bit = some_instruction.a as usize;
 
