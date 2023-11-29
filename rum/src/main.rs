@@ -1,10 +1,10 @@
 use std::env;
 use std::process;
 use std::convert::TryInto;
-mod rum;
-mod segments;
-mod registers;
-mod um_instruction;
+pub mod rum;
+pub mod segment;
+pub mod register;
+pub mod um_instruction;
 
 //function take from past lab
 pub fn load_instruction(input: Option<&str>) -> Vec<u32> 
@@ -45,49 +45,49 @@ fn main()
 
         instruction_count += 1;
 
-        if instruction.op == um_instruction::Opcode::CMov{
+        if this_instruction.op == um_instruction::Opcode::CMov{
             rum.cmov(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Load {
+        else if this_instruction.op == um_instruction::Opcode::Load {
             rum.load(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Store {
+        else if this_instruction.op == um_instruction::Opcode::Store {
             rum.store(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Add {
+        else if this_instruction.op == um_instruction::Opcode::Add {
             rum.add(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Mul {
+        else if this_instruction.op == um_instruction::Opcode::Mul {
             rum.mul(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Div {
+        else if this_instruction.op == um_instruction::Opcode::Div {
             rum.div(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Nand {
+        else if this_instruction.op == um_instruction::Opcode::Nand {
             rum.nand(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Halt {
+        else if this_instruction.op == um_instruction::Opcode::Halt {
             process::exit(0);
         }
-        else if instruction.op == um_instruction::Opcode::MapSegment {
+        else if this_instruction.op == um_instruction::Opcode::MapSegment {
             rum.mapsegment(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::UnmapSegment {
+        else if this_instruction.op == um_instruction::Opcode::UnmapSegment {
             rum.unmapsegment(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Output {
+        else if this_instruction.op == um_instruction::Opcode::Output {
             rum.output(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Input {
+        else if this_instruction.op == um_instruction::Opcode::Input {
             rum.input(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::LoadProgram {
-            counter = rum.loadprogram(this_instruction);
+        else if this_instruction.op == um_instruction::Opcode::LoadProgram {
+            instruction_count = rum.loadprogram(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::LoadValue {
+        else if this_instruction.op == um_instruction::Opcode::LoadValue {
             rum.loadvalue(this_instruction);
         }
-        else if instruction.op == um_instruction::Opcode::Err {
+        else if this_instruction.op == um_instruction::Opcode::Err {
             panic!("Unknown opcode for instruction {:?}", this_instruction)
         }
     }

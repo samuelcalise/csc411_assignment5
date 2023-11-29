@@ -1,12 +1,12 @@
 use std::io::{stdin, Read};
-use crate::{registers::Registers, segments::Segments, um_instruction::Instruction};
+use crate::{register::Register, segment::Segment, um_instruction::Instruction};
 
 
 
 pub struct Rum{
 
-    segment: Segments,
-    register: Registers
+    segment: Segment,
+    register: Register
 }
 
 
@@ -16,14 +16,14 @@ impl Rum{
     {
         Rum{
 
-            segment: Segments::new(&some_instruction),
-            register: Registers::new()
+            segment: Segment::new(&some_instruction),
+            register: Register::new()
         }
     }
 
     pub fn get_instruction(&self, c: usize) -> Instruction
     {
-        self.segment.get_instruction(c)
+        self.segment.find_instruction(c)
     }
 
     pub fn conditional_move(&mut self, some_instruction: Instruction)
@@ -38,7 +38,7 @@ impl Rum{
             
             let value = self.register.get_registerValue(b_bit);
 
-            self.register.set_registerValue(a, value);
+            self.register.set_registerValue(a_bit, value);
         }
     }
 
@@ -54,7 +54,7 @@ impl Rum{
 
         let c_bit = some_instruction.c.unwrap() as usize;
 
-        let value = self.register.get_registerValue(b).wrapping_add(self.register.get_registerValue(c_bit));
+        let value = self.register.get_registerValue(b_bit).wrapping_add(self.register.get_registerValue(c_bit));
 
         self.register.set_registerValue(a_bit, value);
     }
@@ -67,7 +67,7 @@ impl Rum{
 
         let c_bit = some_instruction.c.unwrap() as usize;
 
-        let value = self.register.get_registerValue(b).wrapping_mul(self.register.get_registerValue(c_bit));
+        let value = self.register.get_registerValue(b_bit).wrapping_mul(self.register.get_registerValue(c_bit));
 
         self.register.set_registerValue(a_bit, value);
     }
@@ -80,7 +80,7 @@ impl Rum{
 
         let c_bit = some_instruction.c.unwrap();
 
-        let value = self.register.get_registerValue(b_bit).wrapping_div(self.register.get_registerValue(c_bit));
+        let value = self.register.get_registerValue(b_bit as usize).wrapping_div(self.register.get_registerValue(c_bit as usize));
 
         self.register.get_registerValue(a_bit, value);
     }
@@ -174,6 +174,6 @@ impl Rum{
 
         let value = some_instruction.value.unwrap();
 
-        self.registers.set_registerValue(a_bit, value);
+        self.register.set_registerValue(a_bit, value);
     }
 }

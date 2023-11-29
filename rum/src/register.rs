@@ -13,7 +13,7 @@ impl Register{
     pub fn new() -> Register
     {
         Register{
-            register: vec![0; 8];
+            register: vec![0; 8],
         }
     }
 

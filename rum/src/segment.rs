@@ -15,7 +15,7 @@ impl Segment{
     pub fn new(some_instruction: &Vec<u32>) -> Segment
     {
         Segment{
-            addresses: Vec::new();
+            addresses: Vec::new(),
             instructions: vec![some_instruction.to_vec()]
         }
     }
@@ -45,6 +45,33 @@ impl Segment{
     {
         self.addresses.push(some_address);
 
-        let _new_address = mem::replace(self.instructions.get_mut(some_address).unwrap, Vec::new());
+        let _new_address = mem::replace(self.instructions.get_mut(some_address).unwrap(), Vec::new());
+    }
+
+    pub fn get_segmentValue(&self, some_address: usize) -> Option<&Vec<u32>>
+    {
+        self.instructions.get(some_address)
+    }
+
+    pub fn find_instruction(&self, c: usize) -> Instruction
+    {
+        match self.instructions.get(0){
+            Some(segment) => Instruction::new(segment[c]),
+            None => panic!("No more further instructions")
+        }
+    }
+
+    pub fn set_segmentValue(&mut self, some_address: usize, index: usize, value: u32)
+    {
+        let current_segment = self.instructions.get_mut(some_address).unwrap();
+
+        let _new_segment = mem::replace(current_segment.get_mut(index).unwrap(), value);
+    }
+
+    pub fn insert_value(&mut self, some_address: usize)
+    {
+        let cloned_segment = self.instructions.get(some_address).unwrap().clone();
+
+        let _new_segment = mem::replace(self.instructions.get_mut(0).unwrap(), cloned_segment);
     }
 }
