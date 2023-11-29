@@ -82,7 +82,7 @@ impl Rum{
 
         let value = self.register.get_registerValue(b_bit as usize).wrapping_div(self.register.get_registerValue(c_bit as usize));
 
-        self.register.get_registerValue(a_bit, value);
+        self.register.get_registerValue(a_bit, value as u32);
     }
 
     pub fn bit_NAND(&mut self, some_instruction: Instruction)
