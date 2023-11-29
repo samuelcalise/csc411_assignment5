@@ -1,5 +1,6 @@
-#[derive(Debug)]
+use bitpack::bitpack::{getu};
 
+#[derive(Debug)]
 pub struct Instruction {
     pub opcode: Opcode,
     pub a: u32,
@@ -7,8 +8,6 @@ pub struct Instruction {
     pub c: Option<u32>,
     pub value: Option<u32>
 }
-
-use bitpack::bitpack::{getu};
 
 #[derive(Debug, PartialEq)]
 pub enum Opcode {
@@ -80,38 +79,38 @@ pub fn get_opcode(instruction: u64) -> Opcode {
     }
 }
 
-pub fn get_a(instruction: u64, opcode: &Opcode) -> u32 {
+pub fn get_a_bit(some_instruction: u64, opcode: &Opcode) -> u32 {
     if *opcode == Opcode::LoadValue{
-        return getu(instruction, 25, 3) as u32;
+        return getu(some_instruction, 25, 3) as u32;
     }
     else{
-        return getu(instruction, 6, 3) as u32;
+        return getu(some_instruction, 6, 3) as u32;
     }
 }
 
-pub fn get_b(instruction: u64, opcode: &Opcode) -> Option<u32> {
+pub fn get_b_bit(some_instruction: u64, opcode: &Opcode) -> Option<u32> {
     if *opcode == Opcode::LoadValue{
         return None;
     }
     else{
-        return Some(getu(instruction, 3, 3).try_into().unwrap());
+        return Some(getu(some_instruction, 3, 3).try_into().unwrap());
     }
 
 }
 
-pub fn get_c(instruction: u32, opcode: &Opcode) -> Option<u32> {
+pub fn get_c_bit(some_instruction: u32, opcode: &Opcode) -> Option<u32> {
     if *opcode == Opcode::LoadValue{
         return None
     }
     else{
-        return Some(getu(instruction.into(), 0, 3).try_into().unwrap());
+        return Some(getu(some_instruction.into(), 0, 3).try_into().unwrap());
     }
     
 }
 
-pub fn get_value(instruction: u32, opcode: &Opcode) -> Option<u32> {
+pub fn get_value(some_instruction: u32, opcode: &Opcode) -> Option<u32> {
     if *opcode == Opcode::LoadValue{
-        return Some(getu(instruction.into(), 0, 25).try_into().unwrap());
+        return Some(getu(some_instruction.into(), 0, 25).try_into().unwrap());
     }
     else{
         return None
@@ -124,9 +123,9 @@ impl Instruction {
 
     pub fn new(instruction: u32) -> Instruction {
         let opcode = get_opcode(instruction.into());
-        let a = get_a(instruction.into(), &opcode);
-        let b = get_b(instruction.into(), &opcode);
-        let c = get_c(instruction, &opcode);
+        let a = get_a_bit(instruction.into(), &opcode);
+        let b = get_b_bit(instruction.into(), &opcode);
+        let c = get_c_bit(instruction, &opcode);
         let value = get_value(instruction, &opcode);
 
         //our instruction struct is given new values for each new segment
