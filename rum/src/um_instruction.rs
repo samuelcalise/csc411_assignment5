@@ -104,11 +104,11 @@ pub fn get_aBit(some_instruction: u32, opcode: &Opcode) -> u32
 {
     if *opcode == Opcode::LoadValue
     {
-        getu(some_instruction, 25, 3)
+        return getu(some_instruction, 25, 3);
     }
     else
     {
-        getu(some_instruction, 6, 3)
+        return getu(some_instruction, 6, 3);
     }
 }
 
@@ -116,11 +116,11 @@ pub fn get_bBit(some_instruction: u32, opcode: &Opcode) -> Option<u32>
 {
     if *opcode == Opcode::LoadValue
     {
-        None
+        return None;
     }
     else
     {
-        Some(getu(some_instruction, 3, 3));
+        return Some(getu(some_instruction, 3, 3));
     }
 }
 
@@ -128,11 +128,11 @@ pub fn get_cBit(some_instruction: u32, opcode: &Opcode) -> Option<u32>
 {
     if *opcode == Opcode::LoadValue
     {
-        None
+        return None;
     }
     else
     {
-        Some(getu(some_instruction, 0, 3))
+        return Some(getu(some_instruction, 0, 3));
     }
 }
 
@@ -140,11 +140,11 @@ pub fn get_value(some_instruction: u32, opcode: &Opcode) -> Option<u32>
 {
     if *opcode == Opcode::LoadValue
     {
-        Some(getu(some_instruction, 0, 25))
+        return Some(getu(some_instruction, 0, 25));
     }
     else
     {
-        None
+        return None;
     }
 }
 
