@@ -1,30 +1,23 @@
-
-
 #[derive(Clone, Debug)]
 
 pub struct Register {
-    register: Vec<u32>
+    vec_registers: Vec<u32>,
+
 }
 
+impl Register {
 
-impl Register{
-
-
-    pub fn new() -> Register
-    {
-        Register{
-            register: vec![0; 8],
+    pub fn new() -> Register {
+        Register {
+            vec_registers: vec![0; 8],
         }
     }
 
-
-    pub fn get_registerValue(&self, register: usize) -> u32
-    {
-        self.register[register]
+    pub fn get_reg_val(&self, register: usize) -> u32 {
+        self.vec_registers[register]
     }
 
-    pub fn set_registerValue(&self, register: usize, some_value: u32)
-    {
-        self.register[register] = some_value
+    pub fn set_reg_val(&mut self, register: usize, value: u32) {
+        self.vec_registers[register] = value
     }
 }

@@ -82,7 +82,7 @@ fn main()
             rum.input(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::LoadProgram {
-            instruction_count = rum.load_program(this_instruction);
+            instruction_count = rum.loadprogram(this_instruction);
         }
         else if this_instruction.op == um_instruction::Opcode::LoadValue {
             rum.loadvalue(this_instruction);
