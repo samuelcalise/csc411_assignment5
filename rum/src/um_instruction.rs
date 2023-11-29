@@ -1,7 +1,7 @@
 #[derive(Debug)]
 
 pub struct Instruction {
-    pub op: Opcode,
+    pub opcode: Opcode,
     pub a: u32,
     pub b: Option<u32>,
     pub c: Option<u32>,
@@ -31,48 +31,48 @@ pub enum Opcode {
 
 pub fn get_opcode(instruction: u64) -> Opcode {
   
-    let op = getu(instruction, 28, 4);
+    let opcode_num = getu(instruction, 28, 4);
 
-    if op == 0{
+    if opcode_num == 0{
         Opcode::CMov
     }
-    else if op == 1{
+    else if opcode_num == 1{
         Opcode::Load
     }
-    else if op == 2{
+    else if opcode_num == 2{
         Opcode::Store
     }
-    else if op == 3{
+    else if opcode_num == 3{
         Opcode::Add
     }
-    else if op == 4{
+    else if opcode_num == 4{
         Opcode::Mul
     }
-    else if op == 5{
+    else if opcode_num == 5{
         Opcode::Div
     }
-    else if op == 6{
+    else if opcode_num == 6{
         Opcode::Nand
     }
-    else if op == 7{
+    else if opcode_num == 7{
         Opcode::Halt
     }
-    else if op == 8{
+    else if opcode_num == 8{
         Opcode::MapSegment
     }
-    else if op == 9{
+    else if opcode_num == 9{
         Opcode::UnmapSegment
     }
-    else if op == 10{
+    else if opcode_num == 10{
         Opcode::Output
     }
-    else if op == 11{
+    else if opcode_num == 11{
         Opcode::Input
     }
-    else if op == 12{
+    else if opcode_num == 12{
         Opcode::LoadProgram
     }
-    else if op == 13{
+    else if opcode_num == 13{
         Opcode::LoadValue
     }
     else{
@@ -80,8 +80,8 @@ pub fn get_opcode(instruction: u64) -> Opcode {
     }
 }
 
-pub fn get_a(instruction: u64, op: &Opcode) -> u32 {
-    if *op == Opcode::LoadValue{
+pub fn get_a(instruction: u64, opcode: &Opcode) -> u32 {
+    if *opcode == Opcode::LoadValue{
         return getu(instruction, 25, 3) as u32;
     }
     else{
@@ -89,8 +89,8 @@ pub fn get_a(instruction: u64, op: &Opcode) -> u32 {
     }
 }
 
-pub fn get_b(instruction: u64, op: &Opcode) -> Option<u32> {
-    if *op == Opcode::LoadValue{
+pub fn get_b(instruction: u64, opcode: &Opcode) -> Option<u32> {
+    if *opcode == Opcode::LoadValue{
         return None;
     }
     else{
@@ -99,8 +99,8 @@ pub fn get_b(instruction: u64, op: &Opcode) -> Option<u32> {
 
 }
 
-pub fn get_c(instruction: u32, op: &Opcode) -> Option<u32> {
-    if *op == Opcode::LoadValue{
+pub fn get_c(instruction: u32, opcode: &Opcode) -> Option<u32> {
+    if *opcode == Opcode::LoadValue{
         return None
     }
     else{
@@ -109,8 +109,8 @@ pub fn get_c(instruction: u32, op: &Opcode) -> Option<u32> {
     
 }
 
-pub fn get_value(instruction: u32, op: &Opcode) -> Option<u32> {
-    if *op == Opcode::LoadValue{
+pub fn get_value(instruction: u32, opcode: &Opcode) -> Option<u32> {
+    if *opcode == Opcode::LoadValue{
         return Some(getu(instruction.into(), 0, 25).try_into().unwrap());
     }
     else{
@@ -123,15 +123,15 @@ pub fn get_value(instruction: u32, op: &Opcode) -> Option<u32> {
 impl Instruction {
 
     pub fn new(instruction: u32) -> Instruction {
-        let op = get_opcode(instruction.into());
-        let a = get_a(instruction.into(), &op);
-        let b = get_b(instruction.into(), &op);
-        let c = get_c(instruction, &op);
-        let value = get_value(instruction, &op);
+        let opcode = get_opcode(instruction.into());
+        let a = get_a(instruction.into(), &opcode);
+        let b = get_b(instruction.into(), &opcode);
+        let c = get_c(instruction, &opcode);
+        let value = get_value(instruction, &opcode);
 
         //our instruction struct is given new values for each new segment
         Instruction {
-            op,
+            opcode,
             a,
             b,
             c,
