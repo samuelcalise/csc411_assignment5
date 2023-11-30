@@ -1,6 +1,7 @@
 use std::io::{stdin, Read};
 use crate::{register::Register, segment::Segment, um_instruction::Instruction};
-
+use std::io::stdout;
+use std::io::Write;
 #[derive(Debug, Clone)]
 
 pub struct Rum {
@@ -162,26 +163,22 @@ impl Rum {
         }
 
         print!("{}", char::from_u32(c_value).unwrap());
+        //stdout().flush().unwrap();
     }
 
     pub fn user_input(&mut self, some_instruction: Instruction)
     {
         let c_bit = some_instruction.c.unwrap() as usize;
 
+        //try to implment match statement when iteratoring through a std input in terminal**
         if let Some(Ok(value)) = stdin().bytes().next()
         {
-            if value as char == '\n'
-            {
-                self.register.set_register_value(c_bit, std::u32::MAX);
-            }
-            else
-            {
-                self.register.set_register_value(c_bit, value as u32);
-            }
+            
+            self.register.set_register_value(c_bit, value as u32);
         }
         else
         {
-            panic!("Error: Invalid Input");
+            self.register.set_register_value(c_bit, std::u32::MAX);
         }
     }
 

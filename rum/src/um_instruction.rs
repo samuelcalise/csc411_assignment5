@@ -30,7 +30,7 @@ pub enum Opcode {
 
 pub fn get_opcode(instruction: u64) -> Opcode {
   
-    let opcode_num = getu(instruction, 28, 4);
+    let opcode_num = getu(instruction.try_into().unwrap(), 28, 4);
 
     if opcode_num == 0{
         Opcode::CMov
@@ -81,10 +81,10 @@ pub fn get_opcode(instruction: u64) -> Opcode {
 
 pub fn get_a_bit(some_instruction: u64, opcode: &Opcode) -> u32 {
     if *opcode == Opcode::LoadValue{
-        return getu(some_instruction, 25, 3) as u32;
+        return getu(some_instruction.try_into().unwrap(), 25, 3);
     }
     else{
-        return getu(some_instruction, 6, 3) as u32;
+        return getu(some_instruction.try_into().unwrap(), 6, 3);
     }
 }
 
@@ -93,7 +93,7 @@ pub fn get_b_bit(some_instruction: u64, opcode: &Opcode) -> Option<u32> {
         return None;
     }
     else{
-        return Some(getu(some_instruction, 3, 3).try_into().unwrap());
+        return Some(getu(some_instruction.try_into().unwrap(), 3, 3));
     }
 
 }
@@ -103,14 +103,14 @@ pub fn get_c_bit(some_instruction: u32, opcode: &Opcode) -> Option<u32> {
         return None
     }
     else{
-        return Some(getu(some_instruction.into(), 0, 3).try_into().unwrap());
+        return Some(getu(some_instruction, 0, 3));
     }
     
 }
 
 pub fn get_value(some_instruction: u32, opcode: &Opcode) -> Option<u32> {
     if *opcode == Opcode::LoadValue{
-        return Some(getu(some_instruction.into(), 0, 25).try_into().unwrap());
+        return Some(getu(some_instruction, 0, 25));
     }
     else{
         return None

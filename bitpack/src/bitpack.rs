@@ -64,11 +64,12 @@ pub fn gets(word: u64, width: u64, lsb: u64) -> i64 {
 /// * `word`: An unsigned word
 /// * `width`: the width of a bit field
 /// * `lsb`: the least-significant bit of the bit field
-pub fn getu(word: u64, width: u64, lsb: u64) -> u64 {
+pub fn getu(word: u32, lsb: u32, width: u32) -> u32 {
 /*  //left shifting to get the most  |   //After the left shift, then
     //significant bit position in    |   //right shift off the uneeded
     //the unsigned value             |   //bits from the initial left shift */
-    (word << (64 - width - lsb)) >> (64 - width)
+    //eprintln!("{:032b} this is the word {},{}", word, width, lsb);
+    return (word << (32 - width - lsb)) >> (32 - width)
 }
 
 /// Return a modified version of the unsigned `word`,
