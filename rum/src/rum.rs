@@ -163,7 +163,7 @@ impl Rum {
         }
 
         print!("{}", char::from_u32(c_value).unwrap());
-        //stdout().flush().unwrap();
+        stdout().flush().unwrap();
     }
 
     pub fn user_input(&mut self, some_instruction: Instruction)
