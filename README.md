@@ -21,8 +21,10 @@ The segment.rs hold functionality for mapping and unmapping segments and also up
 
 The um_instruction.rs module processes the instructions to get the register values and organize the instructions into their opcodes. 
 <hr>
+
 It takes our UM approximately 8 seconds to execute 50 million instructions. We know this because we created a timer and a counter for the number of processed instructions so we know when we hit 50 million. 
 
 <hr>
+
 We have spent approximately 2 hours analyzing, 2 hours preparing the design, and 25 hours solving the problem after analysis.
 
